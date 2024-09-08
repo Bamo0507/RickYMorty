@@ -18,7 +18,6 @@ import com.uvg.laboratorio8.login.LoginDestination
 import com.uvg.laboratorio8.login.loginScreen
 import com.uvg.laboratorio8.characters.characterScreen
 import com.uvg.laboratorio8.characters.CharacterDestination
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,19 +28,22 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
-                        startDestination = LoginDestination,
+                        startDestination = LoginDestination, // Siempre empieza en la pantalla de Login
                         modifier = Modifier.fillMaxSize().padding(innerPadding)
                     ) {
+                        // Pantalla de Login
                         loginScreen(
                             onLoginClick = {
-                                navController.navigate(CharacterDestination){
+                                // Al navegar a Characters, eliminamos el Login del backstack
+                                navController.navigate(CharacterDestination) {
                                     popUpTo(LoginDestination) {
-                                        inclusive = true
+                                        inclusive = true // Limpia la pantalla de login del backstack
                                     }
                                 }
                             }
                         )
 
+                        // Pantalla de personajes
                         characterScreen(
                             onCharacterClick = { character ->
                                 navController.navigateToCharacterDetailScreen(
@@ -49,9 +51,14 @@ class MainActivity : ComponentActivity() {
                                         characterId = character
                                     )
                                 )
+                            },
+                            onBackToLogin = {
+                                // Aquí se cierra la aplicación al regresar de la pantalla 2
+                                finish()
                             }
                         )
 
+                        // Pantalla de detalles del personaje
                         characterDetailScreen(
                             onNavigateBack = {
                                 navController.navigateUp()
@@ -59,8 +66,6 @@ class MainActivity : ComponentActivity() {
                         )
                     }
                 }
-
-
             }
         }
     }
