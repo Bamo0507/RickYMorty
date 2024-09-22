@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.dataCharacters
+package com.uvg.laboratorio9.dataCharacters
 
 data class Character(
     val id: Int,

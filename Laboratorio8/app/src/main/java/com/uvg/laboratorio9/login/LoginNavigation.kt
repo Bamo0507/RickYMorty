@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.login
+package com.uvg.laboratorio9.login
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.ui.Modifier

@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.characterDetails
+package com.uvg.laboratorio9.characterDetails
 
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder

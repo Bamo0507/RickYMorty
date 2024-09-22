@@ -1,6 +1,5 @@
-package com.uvg.laboratorio8.characters
+package com.uvg.laboratorio9.characters
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,14 +12,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,55 +33,72 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
-import com.uvg.laboratorio8.login.loginScreen
-import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
-import com.uvg.laboratorio8.dataCharacters.Character
-import com.uvg.laboratorio8.dataCharacters.CharacterDb
+import com.uvg.laboratorio9.ui.theme.Laboratorio9Theme
+import com.uvg.laboratorio9.dataCharacters.Character
+import com.uvg.laboratorio9.dataCharacters.CharacterDb
+import androidx.compose.material3.Scaffold
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.uvg.laboratorio9.components.BottomNavigationBar
+
 
 @Composable
 fun CharacterRoute(
     onCharacterClick: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ){
     val charactersState by remember { mutableStateOf(CharacterDb().getAllCharacters()) }
 
-    CharacterScreen(onCharacterClick = onCharacterClick, characters = charactersState, modifier = modifier)
+    CharacterScreen(onCharacterClick = onCharacterClick, characters = charactersState, modifier = modifier,
+        navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharacterScreen(modifier: Modifier = Modifier,
-                    characters: List<Character>,
-                    onCharacterClick: (Int) -> Unit) {
-    // Usamos Column para organizar la TopAppBar y el contenido de la lista
-    Column(modifier = Modifier.fillMaxSize()) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(16.dp),
-            contentAlignment = Alignment.CenterStart
-        ) {
-            Text(
-                text = "Characters",
-                color = MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.titleLarge
+fun CharacterScreen(
+    modifier: Modifier = Modifier,
+    characters: List<Character>,
+    onCharacterClick: (Int) -> Unit,
+    navController: NavController
+) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Characters",
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             )
-        }
-
-
-        // Lista de personajes directamente debajo de la TopAppBar
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()  // La lista ocupa el resto de la pantalla
-        ) {
-            items(characters.size) { character ->
-                CharacterItem(character = characters[character], onClick = onCharacterClick)
+        },
+        bottomBar = {
+            //Se debe implementar el bottom nav bar
+            BottomNavigationBar(navController = navController)
+        },
+        content = { paddingValues ->
+            // Contenido principal: Lista de personajes
+            LazyColumn(
+                contentPadding = paddingValues,
+                modifier = Modifier
+                    .fillMaxSize()
+                      // Añadimos el padding generado por la TopAppBar
+            ) {
+                items(characters) { character ->
+                    CharacterItem(
+                        character = character,
+                        onClick = onCharacterClick
+                    )
+                }
             }
         }
-    }
+    )
 }
 
 //Función para cada uno de los perfiles
@@ -117,30 +134,3 @@ fun CharacterItem(character: Character, onClick: (Int) -> Unit){
     }
 }
 
-//Lista de perfiles
-@Composable
-fun CharacterList(characters: List<Character>, onCharacterClick: (Int) -> Unit, modifier: Modifier = Modifier){
-    LazyColumn {
-        items(characters.size) { character ->
-            CharacterItem(character = characters[character], onClick = onCharacterClick)
-        }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCharacterScreen() {
-    // Crea una instancia de CharacterDb y obtén la lista de personajes
-    val characterDb = CharacterDb()
-    val characters = characterDb.getAllCharacters()
-
-    Laboratorio8Theme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            CharacterScreen(
-                characters = characters,
-                onCharacterClick = {}
-            )
-        }
-    }
-}

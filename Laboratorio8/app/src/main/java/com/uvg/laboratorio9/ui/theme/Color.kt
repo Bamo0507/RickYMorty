@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.ui.theme
+package com.uvg.laboratorio9.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFF0D6680)

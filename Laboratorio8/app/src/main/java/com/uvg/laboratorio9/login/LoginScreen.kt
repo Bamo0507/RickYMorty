@@ -1,4 +1,4 @@
-package com.uvg.laboratorio8.login
+package com.uvg.laboratorio9.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -18,8 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.uvg.laboratorio8.ui.theme.Laboratorio8Theme
-import com.uvg.laboratorio8.R
+import com.uvg.laboratorio9.R
 
 @Composable
 fun LoginRoute(onLoginClick: () -> Unit,

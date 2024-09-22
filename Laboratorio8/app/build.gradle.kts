@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.uvg.laboratorio8"
+    namespace = "com.uvg.laboratorio9"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.uvg.laboratorio8"
+        applicationId = "com.uvg.laboratorio9"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -63,6 +63,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
 
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
