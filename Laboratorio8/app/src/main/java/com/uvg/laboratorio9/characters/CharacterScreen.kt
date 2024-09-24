@@ -47,12 +47,10 @@ import com.uvg.laboratorio9.components.BottomNavigationBar
 fun CharacterRoute(
     onCharacterClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController
 ){
     val charactersState by remember { mutableStateOf(CharacterDb().getAllCharacters()) }
 
-    CharacterScreen(onCharacterClick = onCharacterClick, characters = charactersState, modifier = modifier,
-        navController = navController)
+    CharacterScreen(onCharacterClick = onCharacterClick, characters = charactersState, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -61,7 +59,6 @@ fun CharacterScreen(
     modifier: Modifier = Modifier,
     characters: List<Character>,
     onCharacterClick: (Int) -> Unit,
-    navController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -78,10 +75,7 @@ fun CharacterScreen(
                 )
             )
         },
-        bottomBar = {
-            //Se debe implementar el bottom nav bar
-            BottomNavigationBar(navController = navController)
-        },
+
         content = { paddingValues ->
             // Contenido principal: Lista de personajes
             LazyColumn(

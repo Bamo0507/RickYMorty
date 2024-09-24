@@ -13,13 +13,11 @@ data object CharacterDestination
 
 fun NavGraphBuilder.characterScreen(
     onCharacterClick: (Int) -> Unit,
-    navController: NavController
 ) {
     composable<CharacterDestination> {
         CharacterRoute(
             onCharacterClick = onCharacterClick,
             modifier = Modifier.fillMaxWidth(),
-            navController = navController
         )
     }
 }

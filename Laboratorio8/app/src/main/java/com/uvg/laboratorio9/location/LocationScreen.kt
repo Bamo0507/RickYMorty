@@ -23,11 +23,11 @@ import com.uvg.laboratorio9.ui.theme.Laboratorio9Theme
 fun LocationRoute(
     onLocationClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    navController: NavController
 ){
     val locationsState by remember { mutableStateOf(LocationDb().getAllLocations()) }
-    LocationScreen(onLocationClick = onLocationClick, locations = locationsState, modifier = modifier,
-        navController = navController)
+    LocationScreen(onLocationClick = onLocationClick,
+        locations = locationsState,
+        modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -36,7 +36,6 @@ fun LocationScreen(
     modifier: Modifier = Modifier,
     locations: List<Location>,
     onLocationClick: (Int) -> Unit,
-    navController: NavController
 ) {
     Scaffold(
         topBar = {
@@ -52,10 +51,6 @@ fun LocationScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-        },
-        bottomBar = {
-            // Aquí implementaré el navigation bar
-            BottomNavigationBar(navController = navController)
         },
         content = { paddingValues ->
             // Contenido principal de la pantalla (la lista de ubicaciones)

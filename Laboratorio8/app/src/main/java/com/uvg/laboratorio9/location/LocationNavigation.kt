@@ -12,13 +12,11 @@ data object LocationDestination
 
 fun NavGraphBuilder.locationScreen(
     onLocationClick: (Int) -> Unit,
-    navController: NavController
 ) {
     composable<LocationDestination> {
         LocationRoute(
             onLocationClick = onLocationClick,
-            modifier = Modifier.fillMaxWidth(),
-            navController = navController
+            modifier = Modifier.fillMaxWidth()
         )
     }
 }

@@ -39,17 +39,15 @@ import com.uvg.laboratorio9.ui.theme.Laboratorio9Theme
 @Composable
 fun ProfileRoute(
     onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    navController: NavController
+    modifier: Modifier = Modifier
 ){
-    ProfileScreen(onLogoutClick = onLogoutClick, modifier = modifier, navController = navController)
+    ProfileScreen(onLogoutClick = onLogoutClick, modifier = modifier)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier, onLogoutClick: () -> Unit,
-    navController: NavController
+    modifier: Modifier = Modifier, onLogoutClick: () -> Unit
 ){
     Scaffold(
         topBar = {
@@ -61,11 +59,6 @@ fun ProfileScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-        },
-        bottomBar = {
-            //Aquí se estará implementando la navegación
-            BottomNavigationBar(navController = navController)
-
         },
         content = { padding ->
             Surface(

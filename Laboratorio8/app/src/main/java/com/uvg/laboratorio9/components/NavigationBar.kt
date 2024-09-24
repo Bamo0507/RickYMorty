@@ -34,7 +34,8 @@ import kotlinx.serialization.descriptors.StructureKind
 
 @Composable
 fun BottomNavigationBar(
-    navController: NavController // Recibir el NavController
+    checkItemSelected: (Any) -> Boolean,
+    onNavItemClick: (Any) -> Unit
 ) {
     val items = listOf(
         NavigationItem.Characters,
@@ -42,32 +43,20 @@ fun BottomNavigationBar(
         NavigationItem.Profile
     )
 
-    // Maintain the selected index with a state mutable of type Int
-    var selectedIndex by rememberSaveable { mutableStateOf(0) }  // Initialize to 0
-
 
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.primary
     ) {
-        val navBackStackEntry by navController.currentBackStackEntryAsState()
-        val currentDestination = navBackStackEntry?.destination.toString()
 
-        items.forEachIndexed { index, item ->
-
-            val isSelected = (currentDestination == item.currentDestination)
-
+        items.forEach{ navItem ->
+            val isSelected = checkItemSelected(navItem.route)
             NavigationBarItem(
                 selected = isSelected,
+                label = {Text(navItem.title,
+                    color = if (isSelected) MaterialTheme.colorScheme.scrim
+                    else MaterialTheme.colorScheme.onPrimary)},
                 onClick = {
-                    // Update the selected index and navigate
-                    selectedIndex = index
-                    navController.navigate(item.route) {
-                        launchSingleTop = true
-                        restoreState = true
-                        popUpTo(navController.graph.startDestinationId) {
-                            saveState = true
-                        }
-                    }
+                    onNavItemClick(navItem.route)
                 },
                 icon = {
                     // Icon logic based on isSelected
@@ -84,8 +73,8 @@ fun BottomNavigationBar(
                                 modifier = Modifier.fillMaxWidth()
                             ) {
                                 Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.title, // Better accessibility
+                                    imageVector = navItem.icon,
+                                    contentDescription = navItem.title, // Better accessibility
                                     tint = MaterialTheme.colorScheme.onSurface,
                                     modifier = Modifier.padding(8.dp)
                                 )
@@ -93,17 +82,11 @@ fun BottomNavigationBar(
                         }
                     } else {
                         Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title, // Better accessibility
+                            imageVector = navItem.icon,
+                            contentDescription = navItem.title, // Better accessibility
                             tint = MaterialTheme.colorScheme.primaryContainer
                         )
                     }
-                },
-                label = {
-                    Text(
-                        text = item.title,
-                        color = if (isSelected) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.primaryContainer
-                    )
                 },
                 alwaysShowLabel = true,
                 colors = NavigationBarItemDefaults.colors(
@@ -117,20 +100,8 @@ fun BottomNavigationBar(
 }
 
 // Sealed classes para los ítems de navegación
-sealed class NavigationItem(val icon: ImageVector, val title: String, val route: Any, val currentDestination: String) {
-    object Characters : NavigationItem(Icons.Filled.People, "Characters", CharacterDestination,"Destination(0xafa0acbd) route=com.uvg.laboratorio9.characters.CharacterDestination")
-    object Locations : NavigationItem(Icons.Filled.Public, "Locations", LocationDestination, "Destination(0x8dee5b4c) route=com.uvg.laboratorio9.location.LocationDestination")
-    object Profile : NavigationItem(Icons.Filled.Person, "Profile", ProfileDestination,"Destination(0xd4812c36) route=com.uvg.laboratorio9.profile.ProfileDestination")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun BottomNavigationBarPreview() {
-    val navController = rememberNavController()
-    Laboratorio9Theme {
-        var selectedItem by rememberSaveable { mutableStateOf(0) }
-        BottomNavigationBar(
-            navController = navController
-        )
-    }
+sealed class NavigationItem(val icon: ImageVector, val title: String, val route: Any) {
+    object Characters : NavigationItem(Icons.Filled.People, "Characters", CharacterDestination)
+    object Locations : NavigationItem(Icons.Filled.Public, "Locations", LocationDestination)
+    object Profile : NavigationItem(Icons.Filled.Person, "Profile", ProfileDestination)
 }

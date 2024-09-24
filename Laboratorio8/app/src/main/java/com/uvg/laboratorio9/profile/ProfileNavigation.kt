@@ -12,13 +12,11 @@ data object ProfileDestination
 
 fun NavGraphBuilder.profileScreen(
     onLogoutClick: () -> Unit,
-    navController: NavController
 ){
     composable<ProfileDestination> {
         ProfileRoute(
             onLogoutClick = onLogoutClick,
             modifier = Modifier.fillMaxWidth(),
-            navController = navController
         )
     }
 }
