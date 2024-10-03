@@ -136,7 +136,8 @@ fun LocationDetailsContent(
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
                         text = location.name,
-                        style = MaterialTheme.typography.titleLarge
+                        style = MaterialTheme.typography.titleLarge,
+                        textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     LocationDetailRow(
@@ -173,7 +174,8 @@ fun LocationDetailRow(
         modifier = modifier,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text(text = "$label:")
+        Text(text = "$label:",
+            textAlign = TextAlign.Start)
         Text(text = value,
             textAlign = TextAlign.End)
     }
