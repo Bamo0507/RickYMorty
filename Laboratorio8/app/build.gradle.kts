@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.uvg.laboratorio9"
+    namespace = "com.uvg.laboratorio10"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.uvg.laboratorio9"
+        applicationId = "com.uvg.laboratorio10"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
