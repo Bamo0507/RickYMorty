@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.uvg.laboratorio10.domain.UserPreferences
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -16,12 +17,14 @@ fun NavController.navigateToMainGraph(navOptions: NavOptions? = null){
 
 fun NavGraphBuilder.mainNavigationGraph(
     onLogoutClick: () -> Unit,
+    preferences: UserPreferences
 ){
     composable<MainNavigationGraph> {
         val nestedNavController = rememberNavController()
         MainFlowScreen(
             navController = nestedNavController,
-            onLogoutClick = onLogoutClick
+            onLogoutClick = onLogoutClick,
+            preferences = preferences
         )
     }
 }

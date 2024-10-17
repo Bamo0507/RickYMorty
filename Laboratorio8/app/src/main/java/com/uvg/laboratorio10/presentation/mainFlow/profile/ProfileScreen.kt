@@ -22,26 +22,46 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uvg.laboratorio10.R
 import com.uvg.laboratorio10.presentation.mainFlow.character.characterDetails.CharacterDetailRow
+import com.uvg.laboratorio10.presentation.mainFlow.profile.ProfileViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.uvg.laboratorio10.domain.UserPreferences
 
 @Composable
 fun ProfileRoute(
     onLogoutClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    preferences: UserPreferences
 ){
-    ProfileScreen(onLogoutClick = onLogoutClick, modifier = modifier)
+    val viewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModelFactory(preferences)
+    )
+    val state = viewModel.uiState.collectAsStateWithLifecycle().value
+
+    ProfileScreen(
+        state = state,
+        onLogoutClick = {
+            viewModel.logOut()
+            onLogoutClick()
+        },
+        modifier = modifier
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
-    modifier: Modifier = Modifier, onLogoutClick: () -> Unit
+    state: ProfileState,
+    modifier: Modifier = Modifier,
+    onLogoutClick: () -> Unit
 ){
     Scaffold(
         topBar = {
@@ -61,41 +81,45 @@ fun ProfileScreen(
                     .fillMaxSize(),
                 color = MaterialTheme.colorScheme.background
             ) {
-                //Imagen con información del perfil
-                Column(modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center){
-                    //Imagen del perfil
-                    Image(
-                        painter = painterResource(id = R.drawable.fotoperfil),
-                        contentDescription = "Foto de perfil",
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(CircleShape),
-                        contentScale = ContentScale.Crop
-                    )
-                    //Espaciado antes del texto de informaciòn
-                    Spacer(modifier = Modifier.height(16.dp))
+                if (state.isLoading) {
 
-                    //Textos de informaciòn de la cuenta
-                    CharacterDetailRow("Nombre", "Bryan Alberto Martìnez Orellana")
-                    CharacterDetailRow("Carnè", "23542")
-
-                    //Espaciado antes del botòn
-                    OutlinedButton(onClick = onLogoutClick,
-                        colors = ButtonDefaults.outlinedButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surface,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
-                        shape = RoundedCornerShape(16.dp),
+                } else {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = "Cerrar Sesión")
+                        Image(
+                            painter = painterResource(id = R.drawable.fotoperfil),
+                            contentDescription = "Foto de perfil",
+                            modifier = Modifier
+                                .size(200.dp)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        // Mostrar el nombre del usuario desde el estado
+                        CharacterDetailRow("Nombre", state.userName)
+                        CharacterDetailRow("Carné", "23542")
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        OutlinedButton(
+                            onClick = onLogoutClick,
+                            colors = ButtonDefaults.outlinedButtonColors(
+                                containerColor = MaterialTheme.colorScheme.surface,
+                                contentColor = MaterialTheme.colorScheme.primary
+                            ),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
+                            shape = RoundedCornerShape(16.dp)
+                        ) {
+                            Text(text = "Cerrar Sesión")
+                        }
                     }
                 }
-
             }
-
         }
 
     )

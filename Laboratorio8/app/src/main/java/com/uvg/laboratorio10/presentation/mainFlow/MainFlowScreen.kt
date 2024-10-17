@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.uvg.laboratorio10.domain.UserPreferences
 import com.uvg.laboratorio10.presentation.mainFlow.character.CharacterNavGraph
 import com.uvg.laboratorio10.presentation.mainFlow.character.characterGraph
 import com.uvg.laboratorio10.presentation.mainFlow.location.locationsGraph
@@ -29,7 +30,8 @@ import com.uvg.laboratorio10.presentation.navigation.topLevelDestinations
 @Composable
 fun MainFlowScreen(
     onLogoutClick: () -> Unit,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    preferences: UserPreferences
 ){
 
     var bottomBarVisible by rememberSaveable {
@@ -79,7 +81,8 @@ fun MainFlowScreen(
             characterGraph(navController)
             locationsGraph(navController)
             profileScreen(
-                onLogoutClick = onLogoutClick
+                onLogoutClick = onLogoutClick,
+                preferences = preferences
             )
         }
 
