@@ -6,11 +6,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -19,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,12 +42,14 @@ fun LoginRoute(
     modifier: Modifier = Modifier,
     preferences: UserPreferences
 ){
+    val context = LocalContext.current // Agregar esta línea
     val owner = LocalSavedStateRegistryOwner.current
     val viewModel: LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(preferences, owner)
+        factory = LoginViewModelFactory(context, preferences, owner)
     )
     LoginScreen(onLoginClick = onLoginClick, modifier = modifier, viewModel = viewModel)
 }
+
 
 
 
@@ -62,73 +68,88 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier, viewMod
         }
     }
 
-
-    // Box para el fondo gris de Rick y Mory
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.surface)
-    ) {
-        Box(modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center){
+    // Mostrar un indicador de carga durante la sincronización
+    if (state.value.isSynchronizing) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 32.dp),
-                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                Box(modifier = Modifier.fillMaxWidth(),
-                    contentAlignment = Alignment.Center){
-
-                }
-                // Logo de Rick and Morty
-                Image(
-                    painter = painterResource(id = R.drawable.logorickmorty),
-                    contentDescription = "Logo",
-                    modifier = Modifier,
-                    contentScale = ContentScale.Fit
-                )
-
-                OutlinedTextField(
-                    value = state.value.name,
-                    onValueChange = { viewModel.onEvent(LoginScreenEvent.UserNameChange(it)) },
-                    label = { Text(text = "Nombre de usuario") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                )
-
-                // Botón de entrar
-                Button(
-                    onClick = {viewModel.onEvent(LoginScreenEvent.LoginClick)},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 32.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                        contentColor = MaterialTheme.colorScheme.onPrimary
-                    ),
-                    enabled = !state.value.isEmpty
-                ) {
-                    Text(text = "Iniciar Sesión")
-                }
-
+                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("Sincronizando datos...")
             }
         }
+    } else {
+        // Box para el fondo gris de Rick y Mory
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.surface)
+        ) {
+            Box(modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center){
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 32.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Box(modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center){
+
+                    }
+                    // Logo de Rick and Morty
+                    Image(
+                        painter = painterResource(id = R.drawable.logorickmorty),
+                        contentDescription = "Logo",
+                        modifier = Modifier,
+                        contentScale = ContentScale.Fit
+                    )
+
+                    OutlinedTextField(
+                        value = state.value.name,
+                        onValueChange = { viewModel.onEvent(LoginScreenEvent.UserNameChange(it)) },
+                        label = { Text(text = "Nombre de usuario") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 16.dp),
+                    )
+
+                    // Botón de entrar
+                    Button(
+                        onClick = {viewModel.onEvent(LoginScreenEvent.LoginClick)},
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 32.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        ),
+                        enabled = !state.value.isEmpty
+                    ) {
+                        Text(text = "Iniciar Sesión")
+                    }
+
+                }
+            }
 
 
-        //BOX - inferior para mi identificación
-        Box(modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter){
-            // Texto para la parte inferior
-            Text(
-                text = "Bryan Alberto Martínez Orellana - #23542",
-                style = MaterialTheme.typography.labelLarge,
-                modifier = Modifier
-                    .padding(bottom = 16.dp)
-            )
+            //BOX - inferior para mi identificación
+            Box(modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter){
+                // Texto para la parte inferior
+                Text(
+                    text = "Bryan Alberto Martínez Orellana - #23542",
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier
+                        .padding(bottom = 16.dp)
+                )
+            }
         }
     }
 }

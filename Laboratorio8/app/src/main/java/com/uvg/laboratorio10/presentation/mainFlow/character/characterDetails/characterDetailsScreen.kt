@@ -15,9 +15,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -30,34 +32,37 @@ import com.uvg.laboratorio10.presentation.mainFlow.ErrorScreen
 @Composable
 fun CharacterDetailRoute(
     characterId: Int,
-    viewModel: CharacterDetailsViewModel = viewModel(), //Se inicializa el viewmodel - siempre procurar hacerlo así
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val owner = LocalSavedStateRegistryOwner.current
 
-    //Recojemos en una variable STATE lo que se registra en el uiState (maneja el flujo de la aplicación y lo que pasa en tiempo real)
-    //Se logra con ayuda del método collectAsStateWithLifecycle()
+    val viewModel: CharacterDetailsViewModel = viewModel(
+        factory = CharacterDetailsViewModelFactory(
+            context = context,
+            owner = owner,
+            defaultArgs = bundleOf("characterId" to characterId)
+        )
+    )
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Llamar a getCharacterData() automáticamente cuando se monta la pantalla
-    //Se lanza el efecto de corrutina para obtener los datos del personaje
-    //el viewmodel que se inició llama al método de getCharacterData()
     LaunchedEffect(characterId) {
         viewModel.getCharacterData()
     }
 
-
-    //Pasar los parámetros a la pantalla
     CharacterDetailScreen(
         state = state,
-        onBackClick = onNavigateBack, //Parámetro para la navegación hacia atrás
+        onBackClick = onNavigateBack,
         onRetryClick = {
-            viewModel.onRetryClick() // Reintentar cargar los datos - manejado por viewmodel
+            viewModel.onRetryClick()
         },
         onLoadingClick = {
-            viewModel.onLoadingClick() // Detectar clic durante la carga - manejado por viewmodel
+            viewModel.onLoadingClick()
         }
     )
 }
+
 
 
 

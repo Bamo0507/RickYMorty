@@ -12,9 +12,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.laboratorio10.data.model.Location
@@ -24,13 +27,21 @@ import com.uvg.laboratorio10.presentation.ui.theme.Laboratorio9Theme
 @Composable
 fun LocationDetailsRoute(
     locationId: Int,
-    viewModel: LocationDetailsViewModel = viewModel(),
     onNavigateBack: () -> Unit
 ) {
+    val context = LocalContext.current
+    val owner = LocalSavedStateRegistryOwner.current
+
+    val viewModel: LocationDetailsViewModel = viewModel(
+        factory = LocationDetailsViewModelFactory(
+            context = context,
+            owner = owner,
+            defaultArgs = bundleOf("locationId" to locationId)
+        )
+    )
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Llamar a getLocationData() automáticamente cuando se monta la pantalla
     LaunchedEffect(locationId) {
         viewModel.getLocationData()
     }
@@ -39,10 +50,10 @@ fun LocationDetailsRoute(
         state = state,
         onNavigateBack = onNavigateBack,
         onRetryClick = {
-            viewModel.onRetryClick() // Llamar al reintento cuando el usuario haga clic en "Reintentar"
+            viewModel.onRetryClick()
         },
         onLoadingClick = {
-            viewModel.onLoadingClick() // Llamar a la acción cuando se haga clic en la pantalla de carga
+            viewModel.onLoadingClick()
         }
     )
 }

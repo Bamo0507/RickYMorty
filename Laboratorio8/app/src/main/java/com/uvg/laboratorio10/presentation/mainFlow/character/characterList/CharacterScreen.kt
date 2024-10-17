@@ -40,16 +40,22 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.uvg.laboratorio10.presentation.mainFlow.ErrorScreen
 
 
 @Composable
 fun CharacterRoute(
-    viewModel: CharacterViewModel = viewModel(),
     onCharacterClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val owner = LocalSavedStateRegistryOwner.current
+    val viewModel: CharacterViewModel = viewModel(
+        factory = CharacterViewModelFactory(context, owner)
+    )
+
     //En tiempo real se actualiza el estado de la variable de state acorde al ciclo de vida
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -71,6 +77,7 @@ fun CharacterRoute(
         modifier = modifier
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +123,6 @@ fun CharacterScreen(
         }
     )
 }
-
 @Composable
 fun CharacterContent(
     characters: List<Character>?,
@@ -165,6 +171,7 @@ fun CharacterContent(
         }
     }
 }
+
 
 
 //Función para cada uno de los perfiles

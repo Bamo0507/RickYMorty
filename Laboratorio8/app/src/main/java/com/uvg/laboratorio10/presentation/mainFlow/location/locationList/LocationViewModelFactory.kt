@@ -1,16 +1,13 @@
-package com.uvg.laboratorio10.presentation.login
+package com.uvg.laboratorio10.presentation.mainFlow.location.locationList
 
 import android.content.Context
 import android.os.Bundle
 import androidx.lifecycle.*
 import androidx.savedstate.SavedStateRegistryOwner
-import com.uvg.laboratorio10.data.repository.CharacterRepository
 import com.uvg.laboratorio10.data.repository.LocationRepository
-import com.uvg.laboratorio10.domain.UserPreferences
 
-class LoginViewModelFactory(
+class LocationViewModelFactory(
     private val context: Context,
-    private val preferences: UserPreferences,
     owner: SavedStateRegistryOwner,
     defaultArgs: Bundle? = null
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
@@ -19,8 +16,7 @@ class LoginViewModelFactory(
     override fun <T : ViewModel> create(
         key: String, modelClass: Class<T>, handle: SavedStateHandle
     ): T {
-        val characterRepository = CharacterRepository(context)
-        val locationRepository = LocationRepository(context)
-        return LoginViewModel(characterRepository, locationRepository, preferences, handle) as T
+        val repository = LocationRepository(context)
+        return LocationViewModel(repository, handle) as T
     }
 }

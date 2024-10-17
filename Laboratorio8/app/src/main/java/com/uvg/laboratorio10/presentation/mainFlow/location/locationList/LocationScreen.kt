@@ -10,6 +10,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSavedStateRegistryOwner
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,13 +22,17 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun LocationRoute(
-    viewModel: LocationViewModel = viewModel(),
     onLocationClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    val owner = LocalSavedStateRegistryOwner.current
+    val viewModel: LocationViewModel = viewModel(
+        factory = LocationViewModelFactory(context, owner)
+    )
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    // Llamar a getLocationData() automáticamente cuando se monta la pantalla
     LaunchedEffect(Unit) {
         viewModel.getListLocations()
     }
@@ -35,14 +41,15 @@ fun LocationRoute(
         state = state,
         onLocationClick = onLocationClick,
         onRetryClick = {
-            viewModel.onRetryClick() // Reintentar cargar los datos
+            viewModel.onRetryClick()
         },
         onLoadingClick = {
-            viewModel.onLoadingClick() // Detectar clic durante la carga
+            viewModel.onLoadingClick()
         },
         modifier = modifier
     )
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
