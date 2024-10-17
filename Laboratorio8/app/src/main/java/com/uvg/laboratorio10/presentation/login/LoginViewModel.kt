@@ -101,10 +101,12 @@ class LoginViewModel(
     private fun loginUser() {
         viewModelScope.launch {
             preferences.setUserName(_uiState.value.name)
+            preferences.logIn() //Asegurar que se logee
             synchronizeData()
             _loginSuccess.value = true
         }
     }
+
 
     //------------------user changed---------------------
     private fun onUserChanged(name: String){
