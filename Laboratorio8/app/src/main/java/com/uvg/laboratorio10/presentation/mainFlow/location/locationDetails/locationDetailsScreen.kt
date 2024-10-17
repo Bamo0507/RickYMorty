@@ -3,6 +3,7 @@ package com.uvg.laboratorio10.presentation.mainFlow.location.locationDetails
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
@@ -22,13 +23,15 @@ import com.uvg.laboratorio10.presentation.ui.theme.Laboratorio9Theme
 
 @Composable
 fun LocationDetailsRoute(
+    locationId: Int,
     viewModel: LocationDetailsViewModel = viewModel(),
     onNavigateBack: () -> Unit
 ) {
+
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Llamar a getLocationData() automáticamente cuando se monta la pantalla
-    LaunchedEffect(Unit) {
+    LaunchedEffect(locationId) {
         viewModel.getLocationData()
     }
 
@@ -63,7 +66,8 @@ fun LocationDetailsScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = null,
+                        Icon(imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = null,
                             tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
@@ -72,10 +76,10 @@ fun LocationDetailsScreen(
                 )
             )
         }
-    ) { padding ->
+    ) { innerPadding ->
         Surface(
             modifier = Modifier
-                .padding(padding)
+                .padding(innerPadding)
                 .fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
@@ -105,7 +109,8 @@ fun LocationDetailsContent(
         when {
             //
             hasError -> {
-                ErrorScreen(modifier = Modifier.fillMaxSize(), onRetryClick = onRetryClick,
+                ErrorScreen(modifier = Modifier.fillMaxSize(),
+                    onRetryClick = onRetryClick,
                     typeError = "información de ubicación")
 
             }
@@ -134,12 +139,14 @@ fun LocationDetailsContent(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
+
                     Text(
                         text = location.name,
                         style = MaterialTheme.typography.titleLarge,
                         textAlign = TextAlign.Center
                     )
                     Spacer(modifier = Modifier.height(16.dp))
+
                     LocationDetailRow(
                         label = "ID",
                         value = location.id.toString(),

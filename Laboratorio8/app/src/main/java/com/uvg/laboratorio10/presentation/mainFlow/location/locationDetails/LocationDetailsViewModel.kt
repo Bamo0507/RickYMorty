@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 class LocationDetailsViewModel(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
+
     private val locationDb = LocationDb() //lugar de donde saco el location esperado
     private val locationProfile = savedStateHandle.toRoute<LocationDetailDestination>() //Ayuda a indicar a donde se navega
     private val _uiState: MutableStateFlow<LocationDetailsState> = MutableStateFlow(LocationDetailsState()) //está constantemente actualizandose
@@ -44,9 +45,6 @@ class LocationDetailsViewModel(
                     isLoading = false,
                 )
             }
-
-
-
         }
     }
     fun onLoadingClick() {

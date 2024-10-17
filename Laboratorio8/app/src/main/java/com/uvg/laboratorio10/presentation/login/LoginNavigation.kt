@@ -7,8 +7,10 @@ import androidx.navigation.compose.composable
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object LoginDestination
+data object LoginDestination //Objeto serializable con el que identificaré a mi pantalla de login
 
+
+//Método del navgraphbuilder para pasar parámetros necesarios en la navegación
 fun NavGraphBuilder.loginScreen(
     onLoginClick: () -> Unit
 ){

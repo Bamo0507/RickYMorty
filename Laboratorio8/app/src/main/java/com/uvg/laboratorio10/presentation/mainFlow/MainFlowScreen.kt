@@ -31,9 +31,11 @@ fun MainFlowScreen(
     onLogoutClick: () -> Unit,
     navController: NavHostController = rememberNavController()
 ){
+
     var bottomBarVisible by rememberSaveable {
         mutableStateOf(false)
     }
+
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination
     bottomBarVisible = if (currentDestination != null){
         topLevelDestinations.any { destination ->

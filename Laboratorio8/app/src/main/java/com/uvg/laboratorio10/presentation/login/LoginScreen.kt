@@ -1,5 +1,6 @@
 package com.uvg.laboratorio10.presentation.login
 
+import android.view.Surface
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,9 +18,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.uvg.laboratorio10.R
 
+
+//Método route que se manda a llamar en el navgraphbuilder
 @Composable
 fun LoginRoute(onLoginClick: () -> Unit,
                 modifier: Modifier = Modifier){
@@ -27,9 +31,10 @@ fun LoginRoute(onLoginClick: () -> Unit,
 }
 
 
+//Método de la pantalla
 @Composable
 fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
-    // Box para el fondo gris
+    // Box para el fondo gris de Rick y Mory
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -59,7 +64,7 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
 
                 // Botón de entrar
                 Button(
-                    onClick = onLoginClick,
+                    onClick = onLoginClick, //Pasamos la lambda para el onclick (será la navegación)
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 32.dp),
@@ -74,6 +79,8 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
             }
         }
 
+
+        //BOX - inferior para mi identificación
         Box(modifier.fillMaxSize(),
             contentAlignment = Alignment.BottomCenter){
             // Texto para la parte inferior
@@ -87,5 +94,10 @@ fun LoginScreen(onLoginClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+@Preview(showBackground = true)
+fun loginPreview(){
+    LoginScreen(onLoginClick = { /*TODO*/ })
+}
 
 

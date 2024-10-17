@@ -7,18 +7,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class LocationDetailDestination(
     val locationId: Int
 )
 
 fun NavController.navigateToLocationDetailScreen(
-    locationId: Int,
+    destination: LocationDetailDestination,
     navOptions: NavOptions? = null
 ) {
     this.navigate(
-        route = LocationDetailDestination(locationId = locationId),
-        navOptions = navOptions
+        destination,
+        navOptions
     )
 }
 
@@ -28,6 +29,7 @@ fun NavGraphBuilder.locationDetailScreen(
     composable<LocationDetailDestination> { backStackEntry ->
         val destination: LocationDetailDestination = backStackEntry.toRoute()
         LocationDetailsRoute(
+            locationId = destination.locationId,
             onNavigateBack = onNavigateBack
         )
     }

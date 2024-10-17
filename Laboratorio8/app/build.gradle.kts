@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
     implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.splashscreen)
 
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)

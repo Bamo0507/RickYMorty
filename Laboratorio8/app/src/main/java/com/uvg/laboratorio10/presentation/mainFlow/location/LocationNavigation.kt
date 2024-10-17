@@ -4,6 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.navigation
+import com.uvg.laboratorio10.presentation.mainFlow.location.locationDetails.LocationDetailDestination
 import com.uvg.laboratorio10.presentation.mainFlow.location.locationDetails.locationDetailScreen
 import com.uvg.laboratorio10.presentation.mainFlow.location.locationDetails.navigateToLocationDetailScreen
 import com.uvg.laboratorio10.presentation.mainFlow.location.locationList.LocationDestination
@@ -24,10 +25,18 @@ fun NavGraphBuilder.locationsGraph(
         startDestination = LocationDestination
     ) {
         locationScreen(
-            onLocationClick = navController::navigateToLocationDetailScreen
+            onLocationClick = { location ->
+                navController.navigateToLocationDetailScreen(
+                    destination = LocationDetailDestination(
+                        locationId = location
+                    )
+                )
+            }
         )
         locationDetailScreen(
-            onNavigateBack = navController::navigateUp
+            onNavigateBack = {
+                navController.navigateUp()
+            }
         )
     }
 }

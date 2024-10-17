@@ -7,11 +7,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
+//Objeto serializable - Se maneja como class porque recibe un ID de la pantalla anterior
 @Serializable
 data class CharacterDetailDestination(
     val characterId: Int
 )
 
+
+//Se establece que
 fun NavController.navigateToCharacterDetailScreen(
     destination: CharacterDetailDestination,
     navOptions: NavOptions? = null

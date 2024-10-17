@@ -4,6 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -25,30 +26,40 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.uvg.laboratorio10.data.source.CharacterDb
 import com.uvg.laboratorio10.presentation.mainFlow.ErrorScreen
 
+//Método Route que se manda a llamar con el método del navgraphbuilder
 @Composable
 fun CharacterDetailRoute(
     characterId: Int,
-    viewModel: CharacterDetailsViewModel = viewModel(),
+    viewModel: CharacterDetailsViewModel = viewModel(), //Se inicializa el viewmodel - siempre procurar hacerlo así
     onNavigateBack: () -> Unit
 ) {
+
+    //Recojemos en una variable STATE lo que se registra en el uiState (maneja el flujo de la aplicación y lo que pasa en tiempo real)
+    //Se logra con ayuda del método collectAsStateWithLifecycle()
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Llamar a getCharacterData() automáticamente cuando se monta la pantalla
+    //Se lanza el efecto de corrutina para obtener los datos del personaje
+    //el viewmodel que se inició llama al método de getCharacterData()
     LaunchedEffect(characterId) {
         viewModel.getCharacterData()
     }
 
+
+    //Pasar los parámetros a la pantalla
     CharacterDetailScreen(
         state = state,
-        onBackClick = onNavigateBack,
+        onBackClick = onNavigateBack, //Parámetro para la navegación hacia atrás
         onRetryClick = {
-            viewModel.onRetryClick() // Reintentar cargar los datos
+            viewModel.onRetryClick() // Reintentar cargar los datos - manejado por viewmodel
         },
         onLoadingClick = {
-            viewModel.onLoadingClick() // Detectar clic durante la carga
+            viewModel.onLoadingClick() // Detectar clic durante la carga - manejado por viewmodel
         }
     )
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,9 +75,9 @@ fun CharacterDetailScreen(
             TopAppBar(
                 title = { Text(text = "Character Detail") },
                 navigationIcon = {
-                    IconButton(onClick = onBackClick) {
+                    IconButton(onClick = onBackClick) { //Navegación hacia atrás
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
                             contentDescription = "Back",
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
@@ -86,12 +97,13 @@ fun CharacterDetailScreen(
             color = MaterialTheme.colorScheme.background
         ) {
             // Mostrar contenido según el estado actual
+            //Llenamos toda la info con el state que ya recibió toda la info que necesitamos
             CharacterDetailContent(
-                character = state.data,
-                isLoading = state.isLoading,
-                hasError = state.hasError,
-                onRetryClick = onRetryClick,
-                onLoadingClick = onLoadingClick,
+                character = state.data, //pasamos la data que ya fue recogida por el state
+                isLoading = state.isLoading, //pasamos el estado de loading
+                hasError = state.hasError, //pasamos el estado de error
+                onRetryClick = onRetryClick, //pasamos el método para reintentar ya definido en el viewmodel
+                onLoadingClick = onLoadingClick, //pasamos el método con la pantalla de carga ya definido en el viewmodel
                 modifier = Modifier.fillMaxSize()
             )
         }
@@ -100,7 +112,7 @@ fun CharacterDetailScreen(
 
 @Composable
 fun CharacterDetailContent(
-    character: Character?,
+    character: Character?, //Se recibe un personaje siguiendo la model data class
     isLoading: Boolean,
     hasError: Boolean,
     onRetryClick: () -> Unit,
@@ -109,6 +121,7 @@ fun CharacterDetailContent(
 ) {
     Box(modifier = modifier) {
         when {
+            //Si se tiene un error detectado se muestra la pantalla de error
             hasError -> {
                 ErrorScreen(
                     modifier = Modifier.fillMaxSize(),
@@ -117,6 +130,7 @@ fun CharacterDetailContent(
                 )
             }
 
+            //Si tenemos un est ado de loading mostramos un circular progress indicator
             isLoading -> {
                 Column(
                     modifier = Modifier
@@ -130,6 +144,7 @@ fun CharacterDetailContent(
                 }
             }
 
+            //Si en el parámetro de Character se paso algo entonces mostramos la información
             character != null -> {
                 Column(
                     modifier = Modifier
@@ -140,7 +155,7 @@ fun CharacterDetailContent(
                 ) {
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    // Imagen del personaje
+                    // Imagen del personaje - ayuda de coil
                     AsyncImage(
                         model = ImageRequest.Builder(LocalContext.current)
                             .data(character.image)

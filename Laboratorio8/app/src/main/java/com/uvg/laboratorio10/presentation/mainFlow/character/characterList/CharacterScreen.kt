@@ -50,6 +50,7 @@ fun CharacterRoute(
     onCharacterClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    //En tiempo real se actualiza el estado de la variable de state acorde al ciclo de vida
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     // Llamar a getListCharacters() automáticamente cuando se monta la pantalla
@@ -57,6 +58,7 @@ fun CharacterRoute(
         viewModel.getListCharacters()
     }
 
+    //Se pasan todos los parámetros necesarios a la pantalla
     CharacterScreen(
         state = state,
         onCharacterClick = onCharacterClick,
@@ -127,6 +129,7 @@ fun CharacterContent(
 ) {
     Box(modifier = modifier) {
         when {
+            //Se manda a llamar a la error screen
             hasError -> {
                 ErrorScreen(
                     modifier = Modifier.fillMaxSize(),
@@ -148,6 +151,7 @@ fun CharacterContent(
                 }
             }
 
+            //Si la data que se paso no es nula, entonces se genera el lazycolumn con los datos
             characters != null -> {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

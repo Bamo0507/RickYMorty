@@ -21,6 +21,7 @@ fun AppNavigation(
         startDestination = LoginDestination,
         modifier = modifier
     ){
+
         loginScreen(
             onLoginClick = {
                 navController.navigateToMainGraph(
@@ -30,6 +31,7 @@ fun AppNavigation(
                 )
             }
         )
+
         mainNavigationGraph(
             onLogoutClick = {
                 navController.navigate(LoginDestination) {
@@ -37,5 +39,6 @@ fun AppNavigation(
                 }
             }
         )
+
     }
 }
