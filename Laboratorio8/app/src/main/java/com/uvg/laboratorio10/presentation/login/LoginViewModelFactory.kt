@@ -19,8 +19,6 @@ class LoginViewModelFactory(
     override fun <T : ViewModel> create(
         key: String, modelClass: Class<T>, handle: SavedStateHandle
     ): T {
-        val characterRepository = CharacterRepository(context)
-        val locationRepository = LocationRepository(context)
-        return LoginViewModel(characterRepository, locationRepository, preferences, handle) as T
+        return LoginViewModel(preferences, handle) as T
     }
 }

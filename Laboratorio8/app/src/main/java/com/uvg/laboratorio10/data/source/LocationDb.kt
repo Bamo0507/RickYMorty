@@ -13,7 +13,7 @@ class LocationDb {
         Location(5, "Anatomy Park", "Microverse", "Dimension C-137"),
         Location(6, "Interdimensional Cable", "TV", "unknown"),
         Location(7, "Immortality Field Resort", "Resort", "unknown"),
-        Location(8, "Post-Apocalyptic Earth", "Planet", "Post-Apocalyptic Dimension"),
+        Location(8, "Postkkl-Apocalyptic Earth", "Planet", "Post-Apocalyptic Dimension"),
         Location(9, "Purge Planet", "Planet", "Replacement Dimension"),
         Location(10, "Venzenulon 7", "Planet", "unknown"),
         Location(11, "Bepis 9", "Planet", "unknown"),

@@ -79,6 +79,9 @@ dependencies {
     // Esta librería es necesaria para poder usar corrutinas y flows con Room
     implementation(libs.androidx.room.ktx)
 
+    implementation(libs.bundles.ktor)
+    implementation(libs.bundles.coil)
+
 
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
