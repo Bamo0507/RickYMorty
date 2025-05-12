@@ -2,15 +2,15 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-
+    id("kotlin-kapt")
 }
 
 android {
-    namespace = "com.uvg.laboratorio8"
+    namespace = "com.uvg.laboratorio10"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.uvg.laboratorio8"
+        applicationId = "com.uvg.laboratorio10"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -49,6 +49,13 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    kapt {
+        arguments {
+            arg("room.schemaLocation", "$projectDir/schemas")
+        }
+    }
+
 }
 
 dependencies {
@@ -63,6 +70,18 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.compose.navigation)
     implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.compose.material:material-icons-extended:1.5.1")
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.splashscreen)
+
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    // Esta librería es necesaria para poder usar corrutinas y flows con Room
+    implementation(libs.androidx.room.ktx)
+
+    implementation(libs.bundles.ktor)
+    implementation(libs.bundles.coil)
+
 
     implementation(libs.androidx.material3)
     testImplementation(libs.junit)
